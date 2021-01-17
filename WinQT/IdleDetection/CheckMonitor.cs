@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace WinQT.IdleDetection
 {
-    class MonitorState
+    class CheckMonitor
     {
         /*[DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]

@@ -109,8 +109,8 @@
     </Compile>
     <Compile Include="IdleDetection\CheckFullscreen.cs" />
     <Compile Include="IdleDetection\LastInput.cs" />
-    <Compile Include="IdleDetection\MonitorState.cs" />
-    <Compile Include="IdleDetection\ScreensaverDetection.cs" />
+    <Compile Include="IdleDetection\CheckMonitor.cs" />
+    <Compile Include="IdleDetection\CheckScreensaver.cs" />
     <Compile Include="MqttHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

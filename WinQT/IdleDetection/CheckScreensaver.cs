@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WinQT.IdleDetection
 {
-    class ScreensaverDetection
+    class CheckScreensaver
     {
         // Signatures for unmanaged calls
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
