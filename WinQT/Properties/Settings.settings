@@ -20,5 +20,17 @@
     <Setting Name="LwtTopic" Type="System.String" Scope="User">
       <Value Profile="(Default)">computer/localhost/status</Value>
     </Setting>
+    <Setting Name="Username" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DiscoveryTopic" Type="System.String" Scope="User">
+      <Value Profile="(Default)">homeassistant</Value>
+    </Setting>
+    <Setting Name="DeviceName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">pc</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

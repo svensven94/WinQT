@@ -30,7 +30,7 @@ namespace WinQT
             // Create a new MQTT client.
             var lwt = new MqttApplicationMessageBuilder()
                 .WithTopic(Settings.Default.LwtTopic)
-                .WithPayload("Offline")
+                .WithPayload("offline")
                 //.WithTopic(Settings.Default.Topic)
                 //.WithPayload("{\"online\":False}")
                 .WithExactlyOnceQoS()
@@ -43,6 +43,7 @@ namespace WinQT
                 .WithTcpServer(Settings.Default.ServerIp, Settings.Default.Port)
                 .WithCleanSession()
                 .WithWillMessage(lwt)
+                .WithCredentials(Settings.Default.Username, Settings.Default.Password)
                 .Build();
 
             var managedOptions = new ManagedMqttClientOptionsBuilder()
@@ -58,7 +59,7 @@ namespace WinQT
 
                 var connectedMessage = new MqttApplicationMessageBuilder()
                     .WithTopic(Settings.Default.LwtTopic)
-                    .WithPayload("Online")
+                    .WithPayload("online")
                     .WithExactlyOnceQoS()
                     .WithRetainFlag(true)
                     .Build();
@@ -72,14 +73,65 @@ namespace WinQT
 
         public async Task SendMessage()
         {
+            string payload = "{\"online\":\"True\",\"idle\":" + "\"" + CheckIdle() + "\"" + ",\"idletime\":" + LastInput.GetIdleTime() / 1000 + "}";
             var message = new MqttApplicationMessageBuilder()
                 .WithTopic(Settings.Default.Topic)
-                .WithPayload("{\"online\":True,\"idle\":" + CheckIdle() + ",\"idletime\":" + LastInput.GetIdleTime() + "}")
+                .WithPayload(payload)
                 .WithExactlyOnceQoS()
                 .WithRetainFlag(false)
                 .Build();
 
-            Console.WriteLine("### SENDING MESSAGE ###");
+            Console.WriteLine("### SENDING MESSAGE ###"  + "\nPayload: " + payload);
+            await mqttClient.PublishAsync(message, CancellationToken.None);
+        }
+
+        public async Task SendDiscoveryMessages()
+        {
+            
+        }
+
+        public async Task DiscoveryMessageOnline()
+        {
+            string deviceNameFormatted = Settings.Default.DeviceName.Replace(" ", "_").ToLower();
+            string payload = "{\"name\":\"Online\",\"unique_id\":\"" + deviceNameFormatted + "_online\",\"device\":{\"identifiers\":[\"" + deviceNameFormatted + "\"],\"name\":\"" + Settings.Default.DeviceName + "\"},\"state_topic\":\"" + Settings.Default.Topic + "\",\"payload_on\":\"True\",\"payload_off\":\"False\",\"value_template\":\"{{value_json.online}}\",\"availability\":[{\"topic\":\"" + Settings.Default.LwtTopic + "\"}],\"payload_available\":\"online\",\"payload_not_available\":\"offline\"}";
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic(Settings.Default.DiscoveryTopic + "/binary_sensor/" + deviceNameFormatted + "_online/config")
+                .WithPayload(payload)
+                .WithExactlyOnceQoS()
+                .WithRetainFlag(false)
+                .Build();
+
+            Console.WriteLine("### SENDING DISCOVERY MESSAGE ###" + "\nPayload: " + payload);
+            await mqttClient.PublishAsync(message, CancellationToken.None);
+        }
+
+        public async Task DiscoveryMessageIdle()
+        {
+            string deviceNameFormatted = Settings.Default.DeviceName.Replace(" ", "_").ToLower();
+            string payload = "{\"name\":\"Idle\",\"unique_id\":\"" + deviceNameFormatted + "_idle\",\"device\":{\"identifiers\":[\"" + deviceNameFormatted + "\"],\"name\":\"" + Settings.Default.DeviceName + "\"},\"state_topic\":\"" + Settings.Default.Topic + "\",\"payload_on\":\"False\",\"payload_off\":\"True\",\"value_template\":\"{{value_json.idle}}\",\"availability\":[{\"topic\":\"" + Settings.Default.LwtTopic + "\"}],\"payload_available\":\"online\",\"payload_not_available\":\"offline\"}";
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic(Settings.Default.DiscoveryTopic + "/binary_sensor/" + deviceNameFormatted + "_idle/config")
+                .WithPayload(payload)
+                .WithExactlyOnceQoS()
+                .WithRetainFlag(false)
+                .Build();
+
+            Console.WriteLine("### SENDING DISCOVERY MESSAGE ###" + "\nPayload: " + payload);
+            await mqttClient.PublishAsync(message, CancellationToken.None);
+        }
+
+        public async Task DiscoveryMessageIdleTime()
+        {
+            string deviceNameFormatted = Settings.Default.DeviceName.Replace(" ", "_").ToLower();
+            string payload = "{\"name\":\"Idletime\",\"unique_id\":\"" + deviceNameFormatted + "\",\"device\":{\"identifiers\":[\"" + deviceNameFormatted + "\"],\"name\":\"" + Settings.Default.DeviceName + "\"},\"state_topic\":\"computer/sven\",\"unit_of_measurement\":\"s\",\"value_template\":\"{{value_json.idletime}}\",\"availability\":[{\"topic\":\"" + Settings.Default.LwtTopic + "\"}],\"payload_available\":\"online\",\"payload_not_available\":\"offline\"}";
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic(Settings.Default.DiscoveryTopic + "/sensor/" + deviceNameFormatted + "idletime/config")
+                .WithPayload(payload)
+                .WithExactlyOnceQoS()
+                .WithRetainFlag(false)
+                .Build();
+
+            Console.WriteLine("### SENDING DISCOVERY MESSAGE ###" + "\nPayload: " + payload);
             await mqttClient.PublishAsync(message, CancellationToken.None);
         }
 
@@ -104,6 +156,9 @@ namespace WinQT
                     if (this.SendTimer.Enabled)
                     {
                         this.SendTimer.Stop();
+                        this.DiscoveryMessageOnline();
+                        this.DiscoveryMessageIdle();
+                        this.DiscoveryMessageIdleTime();
                         this.SendMessage();
                         this.SendTimer.Start(); /* optionally restart for periodic work */
                     }

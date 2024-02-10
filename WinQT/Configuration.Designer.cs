@@ -36,7 +36,7 @@
             this.SettingsGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SettingsGrid.Location = new System.Drawing.Point(0, 0);
             this.SettingsGrid.Name = "SettingsGrid";
-            this.SettingsGrid.Size = new System.Drawing.Size(359, 213);
+            this.SettingsGrid.Size = new System.Drawing.Size(359, 330);
             this.SettingsGrid.TabIndex = 0;
             this.SettingsGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid1_PropertyValueChanged);
             // 
@@ -44,7 +44,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(359, 213);
+            this.ClientSize = new System.Drawing.Size(359, 330);
             this.Controls.Add(this.SettingsGrid);
             this.Name = "Configuration";
             this.Text = "Configuration";

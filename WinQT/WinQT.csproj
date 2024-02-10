@@ -41,6 +41,9 @@
     <Reference Include="MQTTnet.Extensions.ManagedClient, Version=3.0.13.0, Culture=neutral, PublicKeyToken=b69712f52770c0a7, processorArchitecture=MSIL">
       <HintPath>..\packages\MQTTnet.Extensions.ManagedClient.3.0.13\lib\net452\MQTTnet.Extensions.ManagedClient.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -112,8 +115,10 @@
     <Compile Include="IdleDetection\CheckMonitor.cs" />
     <Compile Include="IdleDetection\CheckScreensaver.cs" />
     <Compile Include="MqttHandler.cs" />
+    <Compile Include="Objects\sensor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
     <EmbeddedResource Include="Configuration.resx">
       <DependentUpon>Configuration.cs</DependentUpon>
     </EmbeddedResource>
